@@ -84,6 +84,7 @@ class PredisClientAdapter
             'scheme'    => 'tcp',
             'host'      => $this->ipAddress,
             'port'      => $this->port,
+            'password'  => $this->password,
         );
     }
 
@@ -100,7 +101,7 @@ class PredisClientAdapter
         list($masterIpAddress, $masterPort) = $this->getPredisClient()->sentinel(SentinelCommand::GETMASTER, $nameOfNodeSet);
 
         if (!empty($masterIpAddress) AND !empty($masterPort)) {
-            return new \PSRedis\Client($masterIpAddress, $masterPort, new PredisClientAdapter($this->predisClientFactory, Client::TYPE_REDIS));
+            return new \PSRedis\Client($masterIpAddress, $masterPort, $this->password, new PredisClientAdapter($this->predisClientFactory, Client::TYPE_REDIS));
         }
 
         throw new SentinelError('The sentinel does not know the master address');

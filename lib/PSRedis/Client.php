@@ -30,6 +30,9 @@ class Client
      */
     private $port;
 
+    //
+    private $password;
+
     private $clientAdapter;
 
     const TYPE_SENTINEL = 'sentinel';
@@ -39,10 +42,11 @@ class Client
     const ROLE_MASTER   = 'master';
     const ROLE_SLAVE    = 'slave';
 
-    public function __construct($ipAddress, $port, ClientAdapter $uninitializedClientAdapter = null, $connectionType = self::TYPE_SENTINEL)
+    public function __construct($ipAddress, $port, $password = null, ClientAdapter $uninitializedClientAdapter = null, $connectionType = self::TYPE_SENTINEL)
     {
         $this->ipAddress = $ipAddress;
         $this->port = $port;
+        $this->password = $password;
 
         if (empty($uninitializedClientAdapter)) {
             $uninitializedClientAdapter = new PredisClientAdapter(new PredisClientCreator(), $connectionType);
@@ -54,6 +58,7 @@ class Client
     {
         $clientAdapter->setIpAddress($this->getIpAddress());
         $clientAdapter->setPort($this->getPort());
+        $clientAdapter->setPassword($this->getPassword());
 
         return $clientAdapter;
     }
@@ -72,6 +77,12 @@ class Client
     public function getPort()
     {
         return $this->port;
+    }
+
+    //
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     public function connect()
